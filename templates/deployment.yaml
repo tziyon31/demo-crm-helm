@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "democrm.name" . }}-deploy
+  labels:
+    {{- include "democrm.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.app.replicas }}
+  selector:
+    matchLabels:
+      {{- include "democrm.selectorLabels" . | nindent 6 }}
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        {{- include "democrm.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: {{ .Values.app.container.name }}
+        image: {{ include "democrm.image" . }}
+        imagePullPolicy: {{ .Values.app.image.pullPolicy }}
+        env:
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.secrets.mongodb.uriSecretName }}
+              key: uri
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.config.name }}
+              key: LOG_LEVEL
+        - name: PERSISTENCE
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.config.name }}
+              key: PERSISTENCE
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}

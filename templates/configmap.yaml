@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.config.name }}
+  labels:
+    {{- include "democrm.labels" . | nindent 4 }}
+data:
+  MONGODB_HOSTS: {{ .Values.config.mongodb.hosts | quote }}
+  MONGODB_REPLICA_SET: {{ .Values.config.mongodb.replicaSet | quote }}
+  MONGODB_AUTH_SOURCE: {{ .Values.config.mongodb.authSource | quote }}
+  LOG_LEVEL: {{ .Values.config.logLevel | quote }}
+  PERSISTENCE: {{ .Values.config.persistence | quote }}

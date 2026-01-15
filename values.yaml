@@ -1,0 +1,115 @@
+# ============================================
+# Application Configuration
+# ============================================
+global:
+  appName: democrm
+
+app:
+  name: crm1
+  image:
+    repository: pwstaging/demo-crm
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicas: 3
+  container:
+    name: crm1
+    port: 3000
+
+# Resources
+resources:
+  requests:
+    cpu: "200m"
+    memory: "256Mi"
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
+
+# Service Configuration
+service:
+  name: cluster-ip
+  type: ClusterIP
+  port: 80
+  targetPort: 3000
+
+# Ingress Configuration
+ingress:
+  enabled: true
+  name: ingress
+  className: nginx
+  host: tziyon-crm.ddns.net
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    ingress.kubernetes.io/ssl-redirect: "false"
+  tls:
+    enabled: true
+    secretName: crm1-tls-secret
+
+# ConfigMap Configuration
+config:
+  name: demo-crm-conf
+  logLevel: "info"
+  persistence: "true"
+  mongodb:
+    hosts: "mongodb-replicaset-0.mongodb-replicaset-svc:27017,mongodb-replicaset-1.mongodb-replicaset-svc:27017"
+    replicaSet: "mongodb-replicaset"
+    authSource: "admin"
+
+# Secrets Configuration
+secrets:
+  mongodb:
+    username: "crmuser"
+    password: "crmpassword"  # Will be base64 encoded in template
+    uriSecretName: mongodb-credentials
+    passwordSecretName: mongodb-crmuser-password
+
+# ClusterIssuer Configuration
+clusterIssuer:
+  enabled: true
+  name: letsencrypt-prod
+  email: tziyon31@hotmail.com
+  server: https://acme-v02.api.letsencrypt.org/directory
+  solver:
+    type: http01
+    ingress:
+      class: nginx
+
+# ============================================
+# Dependencies
+# ============================================
+
+# MongoDB Community Operator CRDs
+community-operator-crds:
+  enabled: true
+
+# MongoDB Community Operator
+community-operator:
+  enabled: true
+  community-operator-crds:
+    enabled: false
+  createResource: false
+  resource:
+    name: mongodb-replicaset
+    version: "6.0.5"
+    members: 2
+    users:
+      - name: crmuser
+        db: admin
+        passwordSecretRef:
+          name: mongodb-crmuser-password
+        roles:
+          - name: readWrite
+            db: democrm
+        scramCredentialsSecretName: crmuser-scram
+
+# cert-manager
+cert-manager:
+  enabled: true
+  crds:
+    enabled: true
+
+# nginx-ingress
+nginx-ingress:
+  enabled: true
+  controller:
+    reportIngressStatus:
+      enableLeaderElection: false

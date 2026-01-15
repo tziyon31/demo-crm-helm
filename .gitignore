@@ -1,0 +1,21 @@
+# OS / editors
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs / temp
+*.log
+*.tmp
+
+# Backups
+**/*.bak
+
+# Helm local packaging artifacts
+*.tgz
+
+# You currently have these:
+Chart.lock.bak
+Chart.yaml.bak
+
