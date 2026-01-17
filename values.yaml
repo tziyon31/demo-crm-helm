@@ -50,7 +50,7 @@ config:
   logLevel: "info"
   persistence: "true"
   mongodb:
-    hosts: "mongodb-replicaset-0.mongodb-replicaset-svc:27017,mongodb-replicaset-1.mongodb-replicaset-svc:27017"
+    hosts: "mongodb-replicaset-0.mongodb-replicaset-svc.demo-crm.svc.cluster.local:27017,mongodb-replicaset-1.mongodb-replicaset-svc.demo-crm.svc.cluster.local:27017"
     replicaSet: "mongodb-replicaset"
     authSource: "admin"
 
