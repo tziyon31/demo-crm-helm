@@ -43,6 +43,13 @@ ingress:
   tls:
     enabled: true
     secretName: crm1-tls-secret
+  acmeChallenge:
+    enabled: false
+    # Set to true and update serviceName to the cert-manager ACME solver service name
+    # Find the service name with: kubectl -n demo-crm get svc | grep acme-http-solver
+    # Example: cm-acme-http-solver-jh2xt (the suffix changes with each challenge)
+    serviceName: ""  # e.g., cm-acme-http-solver-jh2xt
+    servicePort: 8089
 
 # ConfigMap Configuration
 config:

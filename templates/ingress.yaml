@@ -21,6 +21,15 @@ spec:
   - host: {{ .Values.ingress.host }}
     http:
       paths:
+      {{- if .Values.ingress.acmeChallenge.enabled }}
+      - path: /.well-known/acme-challenge/
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Values.ingress.acmeChallenge.serviceName }}
+            port:
+              number: {{ .Values.ingress.acmeChallenge.servicePort }}
+      {{- end }}
       - path: /
         pathType: Prefix
         backend:
