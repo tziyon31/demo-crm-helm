@@ -35,7 +35,7 @@ service:
 ingress:
   enabled: true
   name: ingress
-  className: nginx
+  className: ingress-nginx
   host: tziyon-crm.ddns.net
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
