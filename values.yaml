@@ -39,7 +39,7 @@ ingress:
   host: tziyon-crm.ddns.net
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
   tls:
     enabled: true
     secretName: crm1-tls-secret
