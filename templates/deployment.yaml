@@ -15,6 +15,12 @@ spec:
       labels:
         {{- include "democrm.selectorLabels" . | nindent 8 }}
     spec:
+      {{- if .Values.app.image.pullSecrets }}
+      imagePullSecrets:
+        {{- range .Values.app.image.pullSecrets }}
+        - name: {{ . | quote }}
+        {{- end }}
+      {{- end }}
       containers:
       - name: {{ .Values.app.container.name }}
         image: {{ include "democrm.image" . }}

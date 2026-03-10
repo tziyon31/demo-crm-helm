@@ -7,9 +7,14 @@ global:
 app:
   name: crm1
   image:
-    repository: pwstaging/demo-crm
+    repository: 944777360699.dkr.ecr.us-east-1.amazonaws.com/crm
     tag: latest
     pullPolicy: IfNotPresent
+    # Optional: set secret names if your cluster cannot pull from ECR via node IAM role.
+    # Example:
+    # pullSecrets:
+    #   - ecr-registry
+    pullSecrets: []
   replicas: 3
   container:
     name: crm1
